@@ -114,6 +114,8 @@ typedef std::basic_istream<utf16char> utf16istream;
 typedef std::basic_istringstream<utf16char> utf16istringstream;
 #endif
 
+#define CPPREST_EXCLUDE_WEBSOCKETS
+#define CPPREST_EXCLUDE_COMPRESSION
 
 #if defined(_WIN32)
 // Include on everything except Windows Desktop ARM, unless explicitly excluded.
