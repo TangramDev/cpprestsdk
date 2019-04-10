@@ -39,7 +39,14 @@ set(SOURCES
   utilities/web_utilities.cpp
 )
 
-add_library(cpprest ${SOURCES})
+# Generate static library
+option(BUILD_STATIC_LIBS "Build the static library" ON)
+if(BUILD_STATIC_LIBS)
+  add_library(cpprest STATIC ${SOURCES})
+else()
+  add_library(cpprest ${SOURCES})
+endif()
+
 target_include_directories(cpprest
   PUBLIC
     $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -227,7 +234,18 @@ elseif(WINDOWS_STORE)
   endif()
 endif()
 
-set_target_properties(cpprest PROPERTIES OUTPUT_NAME "cpprest${CPPREST_ABI_TAG}")
+# Update Output Name
+if(BUILD_STATIC_LIBS)
+  set(BUILD_STATIC_LIBS_PREFIX "lib")
+endif()
+if(BUILD_MULTI_THREADED_DLL)
+  set(BUILD_MULTI_THREADED_DLL_POSTFIX "_md")
+endif()
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(ARCH_POSTFIX "_64")
+endif()
+set_target_properties(cpprest PROPERTIES OUTPUT_NAME "${BUILD_STATIC_LIBS_PREFIX}cpprest${CPPREST_ABI_TAG}${ARCH_POSTFIX}${BUILD_MULTI_THREADED_DLL_POSTFIX}")
+
 if(WIN32)
 elseif(ANDROID)
   # Do not use SOVERSION on android. It is completely unsupported (and causes problems).

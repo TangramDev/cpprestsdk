@@ -38,7 +38,7 @@ else()
 endif()
 
 if(WIN32)
-  set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Default filename postfix for libraries under configuration DEBUG")
+  set(CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "Default filename postfix for libraries under configuration DEBUG")
 else()
   set(CMAKE_DEBUG_POSTFIX "" CACHE STRING "Default filename postfix for libraries under configuration DEBUG")
 endif()
@@ -174,12 +174,24 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   message("-- Setting msvc options")
+  
+  # Set /MD(/MDd) or /MT(/MTd)
+  option(BUILD_MULTI_THREADED_DLL "Build the Multi-Threaded DLL library" ON)
+  
   set(WARNINGS)
   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /ignore:4264")
   add_compile_options(/bigobj)
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP")
+  if(BUILD_MULTI_THREADED_DLL)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP")
+  else()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP /MTd")
+  endif()
   set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /MP")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP")
+  if(BUILD_MULTI_THREADED_DLL)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP")
+  else()
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP /MT")
+  endif()
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /MP")
 
   if (WINDOWS_STORE OR WINDOWS_PHONE)
@@ -191,9 +203,9 @@ else()
 endif()
 
 # Reconfigure final output directory
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../Binaries)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../Binaries)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../Binaries)
 
 # These settings can be used by the test targets
 set(Casablanca_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
