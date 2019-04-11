@@ -35,8 +35,9 @@ Executing `.\vcpkg integrate install` will print text similar below:
 
 Open **Developer Command Prompt for VS2019** and download cpprestsdk
 
-    > git clone https://github.com/Microsoft/cpprestsdk.git
+    > git clone https://github.com/TangramDev/cpprestsdk.git
     > cd cpprestsdk
+    > git checkout v2.10.12-static
     > mkdir build.x64v142
     > mkdir build.x64v142md
     > mkdir build.win32v142
