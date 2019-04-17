@@ -32,6 +32,8 @@ Executing `.\vcpkg integrate install` will print text similar below:
     > cd c:\src\vcpkg
     > .\vcpkg install --triplet x64-windows-static boost-system zlib openssl boost-date-time boost-regex websocketpp
     > .\vcpkg install --triplet x86-windows-static boost-system zlib openssl boost-date-time boost-regex websocketpp
+    > .\vcpkg install --triplet x64-windows boost-system zlib openssl boost-date-time boost-regex websocketpp
+    > .\vcpkg install --triplet x86-windows boost-system zlib openssl boost-date-time boost-regex websocketpp
 
 Open **Developer Command Prompt for VS2019** and download cpprestsdk
 
